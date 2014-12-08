@@ -1,0 +1,40 @@
+<head>
+  <title>CoderClicker</title>
+</head>
+
+<body>
+	{{> loginButtons}}
+
+  <h1>Welcome to hit steve party!</h1>
+{{#if currentUser}}
+  {{> hello}}
+{{/if}}
+</body>
+
+<template name="hello">
+
+			<table class="leaderboard table table-striped">
+				<thead>
+				<th>Username</th><th>Money</th><th>Dollars per Second</th>
+				</thead>
+
+
+			{{#each players}}
+				{{> player}}
+			{{/each}}
+			</table>
+
+			<input type="button" class="code btn span4" value="Hit steve to earn ($1)" />
+			<h2>You ({{user.username}}) have ${{user.money}} and make ${{user.rate}} per second!</h2>
+			{{#each items}}
+				<input type="button" class="buy btn span4" id="{{cost}}" value="Hire {{name}} (${{cost}})" />
+			{{/each}}
+
+</template>
+<template name="player">
+	<tr class="player">
+	<td class="name">{{username}}</td>
+	<td class="money">${{money}}</td>
+	<td class="rate">{{rate}} dps</td>
+	</tr>
+</template>
