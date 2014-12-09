@@ -7,6 +7,7 @@
 
   <h1>Welcome to hit steve party!</h1>
 {{#if currentUser}}
+  {{> loginButtons}}
   {{> hello}}
 {{/if}}
 </body>
@@ -23,18 +24,51 @@
 				{{> player}}
 			{{/each}}
 			</table>
+			<div class="img1"></div>
+			<div class="img2"></div>
 
-			<input type="button" class="code btn span4" value="Hit steve to earn ($1)" />
+			<input type="button" class="code btn span4 btn-primary" value="Hit steve to earn ($5)" />
 			<h2>You ({{user.username}}) have ${{user.money}} and make ${{user.rate}} per second!</h2>
 			{{#each items}}
-				<input type="button" class="buy btn span4" id="{{cost}}" value="Hire {{name}} (${{cost}})" />
+					<input type="button" class="buy btn span4 btn-success" id="{{name}}" value="Hire {{name}} (${{cost}})" />
 			{{/each}}
-
+<div class="container">
+	YOU ALREADY HAVE
+		<table class="leaderboard table table-striped">
+				<thead>
+				<th>Xavier</th>
+				<th>Arthur</th>
+				<th>Francois</th>
+				<th>Steve</th>
+				<th>Brian</th>
+				<th>Nathalie</th>
+				<th>Ninja</th>
+				<th>Lucca</th>
+				<th>Melissa</th>
+				</thead>
+			{{> stats}}
+		</table>
+			<input type="button" class="reset btn span4 btn-danger" value="reset your account /!\" />
+		</div>
 </template>
 <template name="player">
 	<tr class="player">
 	<td class="name">{{username}}</td>
 	<td class="money">${{money}}</td>
 	<td class="rate">{{rate}} dps</td>
+	</tr>
+</template>
+
+<template name="stats">
+	<tr class="player">
+	<td >{{user.xavier}}</td>
+	<td >{{user.arthur}}</td>
+	<td >{{user.francois}}</td>
+	<td >{{user.steve}}</td>
+	<td >{{user.brian}}</td>
+	<td >{{user.nathalie}}</td>
+	<td >{{user.ninja}}</td>
+	<td >{{user.lucca}}</td>
+	<td >{{user.melissa}}</td>
 	</tr>
 </template>

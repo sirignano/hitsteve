@@ -1,1 +1,11 @@
 /* CSS declarations go here */
+.pimg1 { background:url('/fond1.jpg') no-repeat; width: 500px;height: 400px;}
+.pimg1bis { background:url('/fond2.jpg') no-repeat; width: 500px;height: 400px; }
+.pimg2 { background:url('/fond3.jpg') no-repeat; width: 500px;height: 400px; }
+.pimg2bis { background:url('/fond4.jpg') no-repeat; width: 500px;height: 400px; }
+
+
+
+#none {
+	display: none;
+}
