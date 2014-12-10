@@ -28,13 +28,13 @@
 			<div class="img2"></div>
 
 			<input type="button" class="code btn span4 btn-primary" value="Hit steve to earn ($5)" />
-			<h2>You ({{user.username}}) have ${{user.money}} and make ${{user.rate}} per second!</h2>
+			<h2>You ({{user.username}}) have ${{user.money}} and make ${{user.rate}} per second! UN RESET SERA EFFECTUER LE 11, et pourra avoir lieu toute la journee</h2>
 			{{#each items}}
-					<input type="button" class="buy btn span4 btn-success" id="{{name}}" value="Hire {{name}} (${{cost}})" />
+					<input type="button" class="buy btn span4 {{class}}" id="{{name}}" value="Hire {{name}} (${{cost}})" />
 			{{/each}}
 <div class="container">
 	YOU ALREADY HAVE
-		<table class="leaderboard table table-striped">
+<!-- 		<table class="leaderboard table table-striped">
 				<thead>
 				<th>Xavier</th>
 				<th>Arthur</th>
@@ -46,7 +46,20 @@
 				<th>Lucca</th>
 				<th>Melissa</th>
 				</thead>
+
 			{{> stats}}
+		</table> -->
+		<table class="leaderboard table table-striped">
+			<thead>
+			{{#each stats}}
+				<th >{{name}}</th>
+			{{/each}}
+			</thead>
+			<tr class="player">
+			{{#each stats}}
+				<td >{{number}}</td>
+			{{/each}}
+			</tr>
 		</table>
 			<input type="button" class="reset btn span4 btn-danger" value="reset your account /!\" />
 		</div>
@@ -59,7 +72,7 @@
 	</tr>
 </template>
 
-<template name="stats">
+<!-- <template name="stats">
 	<tr class="player">
 	<td >{{user.xavier}}</td>
 	<td >{{user.arthur}}</td>
@@ -71,4 +84,4 @@
 	<td >{{user.lucca}}</td>
 	<td >{{user.melissa}}</td>
 	</tr>
-</template>
+</template> -->

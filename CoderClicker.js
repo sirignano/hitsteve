@@ -3,6 +3,7 @@ if (Meteor.isClient) {
 
   Meteor.subscribe('userData');
   Meteor.subscribe('items');
+  Meteor.subscribe('inventaire');
   Accounts.ui.config({
     passwordSignupFields: 'USERNAME_ONLY'
   });
@@ -11,8 +12,12 @@ if (Meteor.isClient) {
     return Meteor.user();
   }
 
-    Template.stats.user = function () {
-    return Meteor.user();
+  //   Template.stats.user = function () {
+  //    return Meteor.user();
+  // }
+
+  Template.hello.stats = function () {
+    return Inventaire.find({user_id: Meteor.user()._id}, {sort: {'cost': 1}}).fetch();
   }
 
   Template.hello.helpers({
@@ -28,62 +33,75 @@ Template.hello.players = function () {
     var items = Items.find().fetch();
     var i = 0;
     var user = Meteor.user();
-    while (items[i])
+    len = items.length
+    while (i < len)
     {
-      if (items[i].name == "Xavier")
-      {
-        items[i].cost = items[i].cost + (5 * user.xavier);
-        // if (user.money < (items[i].cost / 2) && user.xavier == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Arthur")
-      {
-        items[i].cost = items[i].cost + (5 * user.arthur);
-        // if (user.money < (items[i].cost / 2) && user.arthur == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Francois")
-      {
-        items[i].cost = items[i].cost + (5 * user.francois);
-        // if (user.money < (items[i].cost / 2) && user.francois == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Steve Himself")
-      {
-        items[i].cost = items[i].cost + (5 * user.steve);
-        // if (user.money < (items[i].cost / 2) && user.steve == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Brian")
-      {
-        items[i].cost = items[i].cost + (5 * user.brian);
-        // if (user.money < (items[i].cost / 2) && user.brian == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Nathalie")
-      {
-        items[i].cost = items[i].cost + (5 * user.nathalie);
-        // if (user.money < (items[i].cost / 2) && user.nathalie == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Ninja")
-      {
-        items[i].cost = items[i].cost + (5 * user.ninja);
-        // if (user.money < (items[i].cost / 2) && user.ninja == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Lucca")
-      {
-        items[i].cost = items[i].cost + (5 * user.lucca);
-        // if (user.money < (items[i].cost / 2) && user.lucca == 0)
-        //   items[i].name = "none";
-      }
-      else if (items[i].name == "Melissa")
-      {
-        items[i].cost = items[i].cost + (5 * user.melissa);
-        // if (user.money < (items[i].cost / 2) && user.melissa == 0)
-        //   items[i].name = "none";
-      }
+      inv = Inventaire.findOne({
+        user_id: Meteor.user()._id,
+        name: items[i].name
+      });
+      if (!inv)
+        items[i].name = "none";
+      else
+        items[i].cost = inv.cost;
+      if (items[i].cost <= Meteor.user().money)
+        items[i].class = 'btn-success';
+      else
+        items[i].class = 'btn-danger';
+      // if (items[i].name == "Xavier")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.xavier);
+      //   // if (user.money < (items[i].cost / 2) && user.xavier == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Arthur")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.arthur);
+      //   // if (user.money < (items[i].cost / 2) && user.arthur == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Francois")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.francois);
+      //   // if (user.money < (items[i].cost / 2) && user.francois == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Steve Himself")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.steve);
+      //   // if (user.money < (items[i].cost / 2) && user.steve == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Brian")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.brian);
+      //   // if (user.money < (items[i].cost / 2) && user.brian == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Nathalie")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.nathalie);
+      //   // if (user.money < (items[i].cost / 2) && user.nathalie == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Ninja")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.ninja);
+      //   // if (user.money < (items[i].cost / 2) && user.ninja == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Lucca")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.lucca);
+      //   // if (user.money < (items[i].cost / 2) && user.lucca == 0)
+      //   //   items[i].name = "none";
+      // }
+      // else if (items[i].name == "Melissa")
+      // {
+      //   items[i].cost = occ(items[i].cost, user.melissa);
+      //   // if (user.money < (items[i].cost / 2) && user.melissa == 0)
+      //   //   items[i].name = "none";
+      // }
       i++;
     }
   return items;
@@ -130,8 +148,11 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
         Meteor.setInterval(function() {
         Meteor.users.find({}).map(function(user) {
-          Meteor.users.update({_id: user._id}, {$inc: {'money': user.rate, 'count': 0}})
+
+          Meteor.users.update({_id: user._id}, {$inc: {'money': user.rate}});
           Meteor.users.update({_id: user._id}, {$set: {'count': 0}});
+          user.money += user.rate;
+          Meteor.call('verif_inv', user);
 
         });
       }, 1000)
@@ -185,8 +206,11 @@ if (Meteor.isServer) {
         }
     // code to run on server at startup
   });
-        Meteor.publish("items", function () {
+    Meteor.publish("items", function () {
       return Items.find();
+    });
+    Meteor.publish("inventaire", function () {
+      return Inventaire.find();
     });
       Meteor.publish("userData", function () {
       return Meteor.users.find({}, {sort: {'rate': -1}});
@@ -208,7 +232,15 @@ if (Meteor.isServer) {
   })
 }
 
+// function occ(cost, nb)
+// {
+//   if (nb <= 0)
+//     return cost;
+//   return (Math.round(occ(cost + (cost / 10), nb - 1)));
+// }
+
 Items = new Mongo.Collection("items");
+Inventaire = new Meteor.Collection("inventaire");
 Meteor.methods({
   change_img1_to_bis: function () {
    //
@@ -220,10 +252,38 @@ Meteor.methods({
      },
   reset: function () {
    Meteor.users.update({_id: this.userId}, {$set: {'money': 0, 'count': 0, 'rate': 0, 'ninja': 0, 'xavier': 0, 'arthur': 0, 'francois': 0, 'steve': 0, 'brian': 0, 'nathalie': 0, 'lucca': 0, 'melissa': 0}});
+   Inventaire.remove({user_id: this.userId});
+  },
+  verif_inv: function (user) {
+    items = Items.find({}, {sort: {'cost': 1}}).fetch();
+    i = 0;
+    len = items.length
+    while (i < len)
+    {
+      inv = Inventaire.findOne({
+        user_id: user._id,
+        name: items[i].name
+      });
+      if (!inv)
+      {
+        if (user.money >= (items[i].cost / 2))
+        {
+          Inventaire.insert({
+            user_id: user._id,
+            name: items[i].name,
+            cost: items[i].cost,
+            number: 0
+          });
+        }
+        return ;
+      }
+      i++;
+    }
   },
   click: function () {
     if (Meteor.user().count < 5)
-    Meteor.users.update({_id: this.userId}, {$inc: {'money': 5, 'count': 1}});
+      Meteor.users.update({_id: this.userId}, {$inc: {'money': 5, 'count': 1}});
+    Meteor.call('verif_inv', Meteor.user());
   },
    buy: function(object)
    {
@@ -235,26 +295,38 @@ Meteor.methods({
       Meteor.users.update({_id: this.userId}, {$set: {'rate': 0, 'money': 0, 'count': 0, 'ninja': 0, 'xavier': 0, 'arthur': 0, 'francois': 0, 'steve': 0, 'brian': 0, 'nathalie': 0, 'lucca': 0, 'melissa': 0}});
     else if (i.cost > 0 && Meteor.user().count < 5)
     {
-      if (object == "Xavier" && (cost = i.cost + (5 * Meteor.user().xavier)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'xavier': 1}});
-      else if (object == "Arthur" && (cost = i.cost + (5 * Meteor.user().arthur)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'arthur': 1}});
-      else if (object == "Francois" && (cost = i.cost + (5 * Meteor.user().francois)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'francois': 1}});
-      else if (object == "Steve Himself" && (cost = i.cost + (5 * Meteor.user().steve)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'steve': 1}});
-      else if (object == "Brian" && (cost = i.cost + (5 * Meteor.user().brian)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'brian': 1}});
-      else if (object == "Nathalie" && (cost = i.cost + (5 * Meteor.user().nathalie)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'nathalie': 1}});
-      else if (object == "Ninja" && (cost = i.cost + (5 * Meteor.user().ninja)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'ninja': 1}});
-      else if (object == "Lucca" && (cost = i.cost + (5 * Meteor.user().lucca)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'lucca': 1}});
-      else if (object == "Melissa" && (cost = i.cost + (5 * Meteor.user().melissa)) <= Meteor.user().money)
-        Meteor.users.update({_id: this.userId}, {$inc: {'melissa': 1}});
-      if (cost > 0 && cost <= Meteor.user().money)
-      Meteor.users.update({_id: this.userId}, {$inc: {'rate': i.incr, 'money': (0 - cost), 'count': 1}});
+      inv = Inventaire.findOne({
+        user_id: Meteor.user()._id,
+        name: object
+      });
+      if (!inv)
+        return ;
+      if (inv.cost <= Meteor.user().money)
+      {
+        Meteor.users.update({_id: this.userId}, {$inc: {'rate': i.incr, 'money': (0 - inv.cost), 'count': 1}});
+        Inventaire.update({_id: inv._id}, {$inc: {'number': 1, 'cost': Math.round(inv.cost / 10)}})
+        return ;
+      }
+      // if (object == "Xavier" && (cost = occ(i.cost ,Meteor.user().xavier)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'xavier': 1}});
+      // else if (object == "Arthur" && (cost = occ(i.cost, Meteor.user().arthur)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'arthur': 1}});
+      // else if (object == "Francois" && (cost = occ(i.cost, Meteor.user().francois)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'francois': 1}});
+      // else if (object == "Steve Himself" && (cost = occ(i.cost, Meteor.user().steve)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'steve': 1}});
+      // else if (object == "Brian" && (cost = occ(i.cost, Meteor.user().brian)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'brian': 1}});
+      // else if (object == "Nathalie" && (cost = occ(i.cost, Meteor.user().nathalie)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'nathalie': 1}});
+      // else if (object == "Ninja" && (cost = occ(i.cost, Meteor.user().ninja)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'ninja': 1}});
+      // else if (object == "Lucca" && (cost = occ(i.cost, Meteor.user().lucca)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'lucca': 1}});
+      // else if (object == "Melissa" && (cost = occ(i.cost, Meteor.user().melissa)) <= Meteor.user().money)
+      //   Meteor.users.update({_id: this.userId}, {$inc: {'melissa': 1}});
+      // if (cost > 0 && cost <= Meteor.user().money)
+      // Meteor.users.update({_id: this.userId}, {$inc: {'rate': i.incr, 'money': (0 - cost), 'count': 1}});
     }
   },
 })
