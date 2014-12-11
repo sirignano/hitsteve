@@ -11,13 +11,19 @@ if (Meteor.isClient) {
     Template.hello.user = function () {
     return Meteor.user();
   }
-
+  Template.hello.nb = function () {
+    return Inventaire.find({user_id: Meteor.user()._id}, {sort: {'start': 1}}).count();
+  }
+    Template.hello.nbmax = function () {
+    return Items.find().count();
+  }
   //   Template.stats.user = function () {
   //    return Meteor.user();
   // }
 
   Template.hello.stats = function () {
-    return Inventaire.find({user_id: Meteor.user()._id}, {sort: {'cost': 1}}).fetch();
+    var ret = Inventaire.find({user_id: Meteor.user()._id}, {sort: {'start': 1}}).fetch();
+    return ret
   }
 
   Template.hello.helpers({
@@ -34,7 +40,7 @@ Template.hello.players = function () {
     var i = 0;
     var user = Meteor.user();
     len = items.length
-    while (i < len)
+    while (i < len && items[i])
     {
       inv = Inventaire.findOne({
         user_id: Meteor.user()._id,
@@ -47,7 +53,7 @@ Template.hello.players = function () {
       if (items[i].cost <= Meteor.user().money)
         items[i].class = 'btn-success';
       else
-        items[i].class = 'btn-danger';
+        items[i].class = 'btn-warning';
       // if (items[i].name == "Xavier")
       // {
       //   items[i].cost = occ(items[i].cost, user.xavier);
@@ -158,54 +164,78 @@ if (Meteor.isServer) {
       }, 1000)
         if (Items.find().count() === 0)
         {
-                    Items.insert({
-                      name: "Xavier",
-                      cost: 100,
-                      incr: 1
-                    });
-                    Items.insert({
-                      name: "Arthur",
-                      cost: 200,
-                      incr: 3
-                    });
-                    Items.insert({
-                      name: "Francois",
-                      cost: 500,
-                      incr: 9
-                    });
-                    Items.insert({
-                      name: "Steve Himself",
-                      cost: 800,
-                      incr: 15
-                    });
-                    Items.insert({
-                      name: "Brian",
-                      cost: 1000,
-                      incr: 21
-                    });
-                    Items.insert({
-                      name: "Nathalie",
-                      cost: 1300,
-                      incr: 28
-                    });
-                    Items.insert({
-                      name: "Ninja",
-                      cost: 1500,
-                      incr: 35
-                    });
-                    Items.insert({
-                      name: "Lucca",
-                      cost: 2000,
-                      incr: 50
-                    });
-                    Items.insert({
-                      name: "Melissa",
-                      cost: 3000,
-                      incr: 75
-                    });
+          Items.insert({
+          name: "Xavier",
+          cost: 100,
+          incr: 1
+        });
+          Items.insert({
+          name: "Arthur",
+          cost: 200,
+          incr: 3
+        });
+          Items.insert({
+          name: "Francois",
+          cost: 500,
+          incr: 9
+        });
+          Items.insert({
+          name: "Steve Himself",
+          cost: 800,
+          incr: 15
+        });
+          Items.insert({
+          name: "Brian",
+          cost: 1000,
+          incr: 21
+        });
+          Items.insert({
+          name: "Nathalie",
+          cost: 1300,
+          incr: 28
+        });
+          Items.insert({
+          name: "Ninja",
+          cost: 1500,
+          incr: 35
+        });
+          Items.insert({
+          name: "Lucca",
+          cost: 2000,
+          incr: 50
+        });
+          Items.insert({
+          name: "Melissa",
+          cost: 3000,
+          incr: 75
+        });
+        }
+        if (Armes.find().count() === 0)
+        {
+          Armes.insert({
+            name: "couteau",
+            cost: 100,
+            time: 50,
+            incr: 1
+          });
+          Armes.insert({
+            name: "fusil a pompe",
+            cost: 200,
+            time: 25,
+            incr: 3
+          });
+          Armes.insert({
+            name: "bazooka",
+            cost: 500,
+            time: 5,
+            incr: 9
+          });
         }
     // code to run on server at startup
   });
+    Meteor.publish("armes", function () {
+      return Items.find();
+    });
     Meteor.publish("items", function () {
       return Items.find();
     });
@@ -217,6 +247,7 @@ if (Meteor.isServer) {
     });
   Accounts.onCreateUser(function(options, user) {
     user.money = 0;
+    user.incr = 5;
     user.count = 0;
     user.rate = 0;
     user.xavier = 0;
@@ -240,7 +271,8 @@ if (Meteor.isServer) {
 // }
 
 Items = new Mongo.Collection("items");
-Inventaire = new Meteor.Collection("inventaire");
+Inventaire = new Mongo.Collection("inventaire");
+Armes = new Mongo.Collection("armes");
 Meteor.methods({
   change_img1_to_bis: function () {
    //
@@ -255,25 +287,31 @@ Meteor.methods({
    Inventaire.remove({user_id: this.userId});
   },
   verif_inv: function (user) {
-    items = Items.find({}, {sort: {'cost': 1}}).fetch();
-    i = 0;
-    len = items.length
-    while (i < len)
+    var items = Items.find({}, {sort: {'cost': 1}}).fetch();
+    var i = 0;
+    if (!items)
+      return ;
+    var len = items.length;
+    while (i < len && items[i])
     {
-      inv = Inventaire.findOne({
+      var inv = Inventaire.findOne({
         user_id: user._id,
         name: items[i].name
       });
-      if (!inv)
+      if (!inv && i < len)
       {
+//        console.log("le i avant " + i.toString() + " len " + len.toString());
         if (user.money >= (items[i].cost / 2))
         {
+ //         console.log('1user ' + user.username + ' a ' + user.money + '$ et voit un ' + items[i].name + ' qui a un cout de ' + items[i].cost + ' ' + i.toString());
           Inventaire.insert({
             user_id: user._id,
             name: items[i].name,
             cost: items[i].cost,
+            start: items[i].cost,
             number: 0
           });
+//          console.log('2user ' + user.username + ' a ' + user.money + '$ et voit un ' + items[i].name + ' qui a un cout de ' + items[i].cost + ' ' + i.toString());
         }
         return ;
       }
@@ -282,7 +320,7 @@ Meteor.methods({
   },
   click: function () {
     if (Meteor.user().count < 5)
-      Meteor.users.update({_id: this.userId}, {$inc: {'money': 5, 'count': 1}});
+      Meteor.users.update({_id: this.userId}, {$inc: {'money': Meteor.user().incr, 'count': 1}});
     Meteor.call('verif_inv', Meteor.user());
   },
    buy: function(object)

@@ -7,7 +7,6 @@
 
   <h1>Welcome to hit steve party!</h1>
 {{#if currentUser}}
-  {{> loginButtons}}
   {{> hello}}
 {{/if}}
 </body>
@@ -27,11 +26,12 @@
 			<div class="img1"></div>
 			<div class="img2"></div>
 
-			<input type="button" class="code btn span4 btn-primary" value="Hit steve to earn ($5)" />
+			<input type="button" class="code btn span4 btn-primary" value="Hit steve to earn (${{user.incr}})" />
 			<h2>You ({{user.username}}) have ${{user.money}} and make ${{user.rate}} per second! UN RESET SERA EFFECTUER LE 11, et pourra avoir lieu toute la journee</h2>
 			{{#each items}}
 					<input type="button" class="buy btn span4 {{class}}" id="{{name}}" value="Hire {{name}} (${{cost}})" />
 			{{/each}}
+			<h1>Vous avez debloquer {{nb}} / {{nbmax}} items</h1>
 <div class="container">
 	YOU ALREADY HAVE
 <!-- 		<table class="leaderboard table table-striped">
