@@ -1,5 +1,5 @@
 <head>
-  <title>CoderClicker</title>
+  <title>Hit Steve</title>
 </head>
 
 <body>
@@ -23,6 +23,9 @@
 				{{> player}}
 			{{/each}}
 			</table>
+			{{#each armes}}
+					<input type="button" class="engage btn span4 {{class}}" id="{{name}}" value="Hire {{name}} (${{cost}}) for {{time}} seconds" />
+			{{/each}}
 			<div class="img1"></div>
 			<div class="img2"></div>
 
@@ -31,7 +34,7 @@
 			{{#each items}}
 					<input type="button" class="buy btn span4 {{class}}" id="{{name}}" value="Hire {{name}} (${{cost}})" />
 			{{/each}}
-			<h1>Vous avez debloquer {{nb}} / {{nbmax}} items</h1>
+			<h1>Vous avez debloquer {{user.nb_items}} / {{nbmax}} items</h1>
 <div class="container">
 	YOU ALREADY HAVE
 <!-- 		<table class="leaderboard table table-striped">
